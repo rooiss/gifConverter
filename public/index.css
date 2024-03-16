@@ -1,0 +1,7 @@
+progress {
+  display: none;
+}
+
+progress.visible {
+  display: inline;
+}

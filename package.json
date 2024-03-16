@@ -15,6 +15,7 @@
     "nodemon": "^3.1.0"
   },
   "dependencies": {
+    "body-parser": "^1.20.2",
     "fluent-ffmpeg": "^2.1.2",
     "multer": "^1.4.5-lts.1"
   }

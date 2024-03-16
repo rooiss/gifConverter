@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="index.css" />
     <title>Document</title>
   </head>
   <body>
@@ -14,9 +15,19 @@
     >
       <div>
         <input id="uploadInput" type="file" name="video" />
-        <input id="uploadInput" type="file" name="video" />
+        <label>width of gif</label>
+        <input id="outputWidth" type="number" name="outputWidth" />
+        <label>output file type</label>
+        <input id="outputType" type="text" name="outputType" />
       </div>
       <div><input type="submit" value="Send file" /></div>
+      <p>
+        <progress />
+      </p>
+      <p>
+        <output></output>
+      </p>
     </form>
+    <script src="/upload.js"></script>
   </body>
 </html>
