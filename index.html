@@ -7,18 +7,52 @@
     <title>Document</title>
   </head>
   <body>
+    <h1>Convert mov to gif</h1>
     <form
       name="uploadForm"
       action="/uploadVideo"
       method="post"
       enctype="multipart/form-data"
+      id="uploadForm"
     >
-      <div>
-        <input id="uploadInput" type="file" name="video" />
+      <div
+        id="drop_zone"
+        ondrop="dropHandler(event);"
+        ondragover="dragOverHandler(event);"
+        onchange="checkFileSize(this)"
+      >
+        <p>
+          Drag your video here to upload or
+          <button
+            id="video-upload-button"
+            type="button"
+            onclick="uploadButtonClick(event)"
+          >
+            select a file
+          </button>
+        </p>
+        <input
+          id="uploadInput"
+          type="file"
+          name="video"
+          accept="video/*"
+          onchange="checkFileSize(this)"
+          hidden
+        />
+      </div>
+      <div class="vid-inputs" id="vidInputs">
         <label>width of gif</label>
-        <input id="outputWidth" type="number" name="outputWidth" />
+        <input
+          id="outputWidth"
+          type="number"
+          name="outputWidth"
+          min="10"
+          max="320"
+        />
         <label>output file type</label>
-        <input id="outputType" type="text" name="outputType" />
+        <select name="outputType" id="outputTypeSelect">
+          <option value="gif">gif</option>
+        </select>
       </div>
       <div><input type="submit" value="Send file" /></div>
       <p>

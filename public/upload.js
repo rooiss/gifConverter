@@ -1,51 +1,26 @@
-// Create a new XMLHttpRequest object
-// var xhr = new XMLHttpRequest()
-
-// // Define the URL and method for the request
-// var url = inputFilePath
-// var method = 'POST'
-
-// // Open the request
-// xhr.open(method, url, true)
-
-// console.log(xhr)
-
-// Set up event listeners to track progress
-// xhr.upload.addEventListener('progress', function (event) {
-//   if (event.lengthComputable) {
-//     var percentComplete = (event.loaded / event.total) * 100
-//     console.log('Upload Progress: ' + percentComplete + '%')
-//   }
-// })
-
-// // Set up event listener for when the upload is complete
-// xhr.upload.addEventListener('load', function (event) {
-//   console.log('Upload Complete!')
-// })
-
-// // Set up event listener for when there's an error
-// xhr.upload.addEventListener('error', function (event) {
-//   console.log('Error uploading file!')
-// })
-
-// // Send the request
-// xhr.send(your_xml_data)
-
 addEventListener('DOMContentLoaded', () => {
   const fileInput = document.getElementById('uploadInput')
   const progressBar = document.querySelector('progress')
   const log = document.querySelector('output')
 
-  fileInput.addEventListener('change', () => {
+  const form = document.getElementById('uploadForm')
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault()
+
+    const {
+      outputType: { value: outputType },
+      outputWidth: { value: outputWidth },
+    } = form
+
     const xhr = new XMLHttpRequest()
-    xhr.timeout = 2000
+    xhr.timeout = 60000
 
     xhr.upload.addEventListener('loadstart', (event) => {
       progressBar.classList.add('visible')
       progressBar.value = 0
       progressBar.max = event.total
       log.textContent = 'Uploading (0%)…'
-      abortButton.disabled = false
     })
 
     xhr.upload.addEventListener('progress', (event) => {
@@ -61,7 +36,6 @@ addEventListener('DOMContentLoaded', () => {
       if (event.loaded !== 0) {
         log.textContent = 'Upload finished.'
       }
-      abortButton.disabled = true
     })
 
     // In case of an error, an abort, or a timeout, we hide the progress bar
@@ -76,7 +50,9 @@ addEventListener('DOMContentLoaded', () => {
 
     // Build the payload
     const fileData = new FormData()
-    fileData.append('file', fileInput.files[0])
+    fileData.append('video', fileInput.files[0])
+    fileData.append('outputType', outputType)
+    fileData.append('outputWidth', outputWidth)
 
     // Theoretically, event listeners could be set after the open() call
     // but browsers are buggy here
@@ -86,3 +62,52 @@ addEventListener('DOMContentLoaded', () => {
     xhr.send(fileData)
   })
 })
+
+function checkFileSize(input) {
+  var maxSize = 5 * 1024 * 1024 // 5 MB
+
+  if (input.files && input.files[0]) {
+    var fileSize = input.files[0].size // Size in bytes
+
+    if (fileSize > maxSize) {
+      alert('File size exceeds the limit (5 MB). Please choose a smaller file.')
+      input.value = '' // Reset file input to clear the selected file
+    } else {
+      const vidInputs = document.getElementById('vidInputs')
+      vidInputs.classList.add('visible')
+      // remove all shit inside drop zone and replace with file name and option to delete
+      const dropzone = document.getElementById('drop_zone')
+      dropzone.classList.add('disable')
+    }
+  }
+}
+
+function dropHandler(e) {
+  e.preventDefault()
+
+  if (e.dataTransfer.items) {
+    // Use DataTransferItemList interface to access the file(s)
+    ;[...e.dataTransfer.items].forEach((item, i) => {
+      // If dropped items aren't files, reject them
+      if (item.kind === 'file') {
+        const file = item.getAsFile()
+        console.log(`… file[${i}].name = ${file.name}`)
+      }
+    })
+  } else {
+    // Use DataTransfer interface to access the file(s)
+    ;[...e.dataTransfer.files].forEach((file, i) => {
+      console.log(`… file[${i}].name = ${file.name}`)
+    })
+  }
+}
+function dragOverHandler(e) {
+  // Prevent default behavior (Prevent file from being opened)
+  e.preventDefault()
+}
+
+function uploadButtonClick(e) {
+  e.preventDefault()
+  const fileInput = document.getElementById('uploadInput')
+  fileInput.click()
+}

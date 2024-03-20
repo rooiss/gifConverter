@@ -5,3 +5,43 @@ progress {
 progress.visible {
   display: inline;
 }
+.vid-inputs {
+  display: none;
+}
+.vid-inputs.visible {
+  display: inline;
+}
+form {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+form * {
+  margin: 7px;
+}
+#video-upload-button {
+  color: white;
+  background-color: mediumpurple;
+  border-radius: 20px;
+  border: none;
+  padding: 5px 5px
+}
+#drop_zone {
+  border: 2px dotted lightgray;
+  width: 400px;
+  height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#drop_zone.disable *{
+  display: none;
+}
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
