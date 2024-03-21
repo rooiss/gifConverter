@@ -74,9 +74,8 @@ function checkFileSize(input) {
       input.value = '' // Reset file input to clear the selected file
     } else {
       const vidInputs = document.getElementById('vidInputs')
-      vidInputs.classList.add('visible')
-      // remove all shit inside drop zone and replace with file name and option to delete
       const dropzone = document.getElementById('drop_zone')
+      vidInputs.classList.add('visible')
       dropzone.classList.add('disable')
     }
   }
@@ -101,6 +100,7 @@ function dropHandler(e) {
     })
   }
 }
+
 function dragOverHandler(e) {
   // Prevent default behavior (Prevent file from being opened)
   e.preventDefault()
@@ -110,4 +110,11 @@ function uploadButtonClick(e) {
   e.preventDefault()
   const fileInput = document.getElementById('uploadInput')
   fileInput.click()
+}
+
+const checkVideoWidth = (input) => {
+  const submitInput = document.getElementById('submitInput')
+  if (input.value !== '' && input.value >= 10 && input.value <= 320) {
+    submitInput.disabled = false
+  }
 }

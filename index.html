@@ -48,13 +48,16 @@
           name="outputWidth"
           min="10"
           max="320"
+          onchange="checkVideoWidth(this)"
         />
         <label>output file type</label>
         <select name="outputType" id="outputTypeSelect">
           <option value="gif">gif</option>
         </select>
       </div>
-      <div><input type="submit" value="Send file" /></div>
+      <div>
+        <input id="submitInput" type="submit" value="Send file" disabled />
+      </div>
       <p>
         <progress />
       </p>

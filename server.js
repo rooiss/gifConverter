@@ -42,8 +42,7 @@ app.post('/uploadVideo', upload.single('video'), function (req, res) {
     .output(outputFilePath)
     .outputOptions('-vf', `fps=10,scale=${outputWidth}:-1:flags=lanczos`)
     .on('end', () => {
-      console.log('Conversion complete')
-      res.download(outputFilePath) // Download the converted GIF file
+      res.json({ outputFilePath })
     })
     .on('error', (err) => {
       console.error('Error during conversion:', err)
