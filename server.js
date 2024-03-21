@@ -16,11 +16,24 @@ app.get('/', function (req, res) {
 })
 
 app.post('/uploadVideo', upload.single('video'), function (req, res) {
+  // condense validations and just return a object with status
   if (!req.file) {
     return res.status(400).send('No file uploaded.')
   }
 
+  const maxSize = 5 * 1024 * 1024
+  if (req.file.size > maxSize) {
+    return res.status(400).send('File size exceeds 5MB')
+  }
+
   const { outputWidth, outputType } = req.body
+  const maxWidth = 320
+  if (outputType > 320)
+    return res.status(400).send(`output width exceeds max width of ${maxWidth}`)
+
+  if (outputWidth === '' || outputType === '') {
+    return res.status(400).send('output width or type field must be filled out')
+  }
 
   const inputFilePath = req.file.path
   const outputFilePath = path.join(__dirname, `output.${outputType}`)
@@ -29,17 +42,20 @@ app.post('/uploadVideo', upload.single('video'), function (req, res) {
     .output(outputFilePath)
     .outputOptions('-vf', `fps=10,scale=${outputWidth}:-1:flags=lanczos`)
     .on('end', () => {
-      console.log('Conversion complete')
-      res.download(outputFilePath) // Download the converted GIF file
+      res.json({ outputFilePath })
     })
     .on('error', (err) => {
       console.error('Error during conversion:', err)
       res.status(500).send('Error during conversion.')
     })
     .run()
+
+  // res.send()
 })
 
 app.use(express.static('public'))
+
+// app.use()
 
 app.listen(port, function () {
   console.log(`listening on port ${port}!`)
