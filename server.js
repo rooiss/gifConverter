@@ -3,9 +3,10 @@ const path = require('path')
 const ffmpeg = require('fluent-ffmpeg')
 const multer = require('multer')
 const bodyParser = require('body-parser')
+const fs = require('fs')
 
 const app = express()
-const upload = multer({ dest: 'uploads/' })
+const upload = multer({ dest: 'public/tmp' })
 
 const port = 3000
 
@@ -16,7 +17,7 @@ app.get('/', function (req, res) {
 })
 
 app.post('/uploadVideo', upload.single('video'), function (req, res) {
-  // condense validations and just return a object with status
+  console.log('req file', req.file)
   if (!req.file) {
     return res.status(400).send('No file uploaded.')
   }
@@ -35,22 +36,36 @@ app.post('/uploadVideo', upload.single('video'), function (req, res) {
     return res.status(400).send('output width or type field must be filled out')
   }
 
+  const fileName = req.file.filename
+  const outputFileBasename = `/uploads/${req.file.filename}.${outputType}`
   const inputFilePath = req.file.path
-  const outputFilePath = path.join(__dirname, `output.${outputType}`)
+  const outputFilePath = path.join(__dirname, 'public', outputFileBasename)
+  // const link = `${req.protocol}://${req.get('host')}`
 
   ffmpeg(inputFilePath)
     .output(outputFilePath)
     .outputOptions('-vf', `fps=10,scale=${outputWidth}:-1:flags=lanczos`)
     .on('end', () => {
-      res.json({ outputFilePath })
+      res.json({ fileName })
+      fs.unlink(inputFilePath, (err) => {
+        if (err) throw err
+        console.log(`${inputFilePath} was deleted`)
+      })
     })
     .on('error', (err) => {
       console.error('Error during conversion:', err)
       res.status(500).send('Error during conversion.')
     })
     .run()
+})
 
-  // res.send()
+app.get('/download/:filename', (req, res) => {
+  const filePath = path.join(__dirname, 'uploads', req.params.filename)
+  res.setHeader(
+    'Content-Disposition',
+    'attachment; filename=' + req.params.filename,
+  )
+  res.download(filePath)
 })
 
 app.use(express.static('public'))

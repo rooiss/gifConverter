@@ -4,10 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="index.css" />
+    <link rel="stylesheet" href="reset.css" />
     <title>Document</title>
   </head>
   <body>
     <h1>Convert mov to gif</h1>
+    <div id="modalContainer" class="modal">
+      <div class="modal-content"></div>
+    </div>
     <form
       name="uploadForm"
       action="/uploadVideo"
@@ -48,15 +52,19 @@
           name="outputWidth"
           min="10"
           max="320"
+          value="320"
           onchange="checkVideoWidth(this)"
         />
         <label>output file type</label>
         <select name="outputType" id="outputTypeSelect">
-          <option value="gif">gif</option>
+          <option value="gif" selected>gif</option>
         </select>
       </div>
       <div>
-        <input id="submitInput" type="submit" value="Send file" disabled />
+        <button id="modalBtn" type="button" onclick="triggerModal(event)">
+          Send File
+        </button>
+        <input id="submitInput" type="submit" hidden />
       </div>
       <p>
         <progress />

@@ -1,10 +1,5 @@
 addEventListener('DOMContentLoaded', () => {
-  const fileInput = document.getElementById('uploadInput')
-  const progressBar = document.querySelector('progress')
-  const log = document.querySelector('output')
-
   const form = document.getElementById('uploadForm')
-
   form.addEventListener('submit', (event) => {
     event.preventDefault()
 
@@ -15,7 +10,9 @@ addEventListener('DOMContentLoaded', () => {
 
     const xhr = new XMLHttpRequest()
     xhr.timeout = 60000
-
+    const fileInput = document.getElementById('uploadInput')
+    const progressBar = document.querySelector('progress')
+    const log = document.querySelector('output')
     xhr.upload.addEventListener('loadstart', (event) => {
       progressBar.classList.add('visible')
       progressBar.value = 0
@@ -113,8 +110,25 @@ function uploadButtonClick(e) {
 }
 
 const checkVideoWidth = (input) => {
-  const submitInput = document.getElementById('submitInput')
+  const modalBtn = document.getElementById('modalBtn')
   if (input.value !== '' && input.value >= 10 && input.value <= 320) {
-    submitInput.disabled = false
+    modalBtn.disabled = false
+  }
+}
+
+const triggerModal = (e) => {
+  e.preventDefault()
+  const modal = document.getElementById('modalContainer')
+  modal.style.display = 'block'
+
+  // add this back in
+  const submitInput = document.getElementById('submitInput')
+  submitInput.click()
+}
+
+window.onclick = (event) => {
+  const modal = document.getElementById('modalContainer')
+  if (event.target == modal) {
+    modal.style.display = 'none'
   }
 }
