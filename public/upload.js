@@ -61,41 +61,33 @@ addEventListener('DOMContentLoaded', () => {
 })
 
 function checkFileSize(input) {
-  var maxSize = 5 * 1024 * 1024 // 5 MB
+  const maxSize = 5 * 1024 * 1024 // 5 MB
+  let file
+  console.log('input', input)
+  if (input.files) {
+    file = input.files[0]
+  }
+  if (input[0]) {
+    file = input[0]
+  }
+  const fileSize = file.size // Size in bytes
 
-  if (input.files && input.files[0]) {
-    var fileSize = input.files[0].size // Size in bytes
-
-    if (fileSize > maxSize) {
-      alert('File size exceeds the limit (5 MB). Please choose a smaller file.')
-      input.value = '' // Reset file input to clear the selected file
-    } else {
-      const vidInputs = document.getElementById('vidInputs')
-      const dropzone = document.getElementById('drop_zone')
-      vidInputs.classList.add('visible')
-      dropzone.classList.add('disable')
-    }
+  if (fileSize > maxSize) {
+    alert('File size exceeds the limit (5 MB). Please choose a smaller file.')
+    input.value = '' // Reset file input to clear the selected file
+  } else {
+    const vidInputs = document.getElementById('vidInputs')
+    const dropzone = document.getElementById('drop_zone')
+    vidInputs.classList.add('visible')
+    dropzone.classList.add('disable')
   }
 }
 
 function dropHandler(e) {
   e.preventDefault()
-
-  if (e.dataTransfer.items) {
-    // Use DataTransferItemList interface to access the file(s)
-    ;[...e.dataTransfer.items].forEach((item, i) => {
-      // If dropped items aren't files, reject them
-      if (item.kind === 'file') {
-        const file = item.getAsFile()
-        console.log(`… file[${i}].name = ${file.name}`)
-      }
-    })
-  } else {
-    // Use DataTransfer interface to access the file(s)
-    ;[...e.dataTransfer.files].forEach((file, i) => {
-      console.log(`… file[${i}].name = ${file.name}`)
-    })
-  }
+  checkFileSize(e.dataTransfer.files)
+  const fileInput = document.getElementById('uploadInput')
+  fileInput.files[0] = e.dataTransfer.files[0]
 }
 
 function dragOverHandler(e) {
@@ -121,7 +113,6 @@ const triggerModal = (e) => {
   const modal = document.getElementById('modalContainer')
   modal.style.display = 'block'
 
-  // add this back in
   const submitInput = document.getElementById('submitInput')
   submitInput.click()
 }

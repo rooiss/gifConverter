@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="index.css" />
     <link rel="stylesheet" href="reset.css" />
-    <title>Document</title>
+    <title>Video Converter</title>
   </head>
   <body>
     <h1>Convert mov to gif</h1>
@@ -23,7 +23,6 @@
         id="drop_zone"
         ondrop="dropHandler(event);"
         ondragover="dragOverHandler(event);"
-        onchange="checkFileSize(this)"
       >
         <p>
           Drag your video here to upload or
@@ -61,7 +60,12 @@
         </select>
       </div>
       <div>
-        <button id="modalBtn" type="button" onclick="triggerModal(event)">
+        <button
+          id="modalBtn"
+          type="button"
+          onclick="triggerModal(event)"
+          disabled
+        >
           Send File
         </button>
         <input id="submitInput" type="submit" hidden />

@@ -10,13 +10,39 @@ const upload = multer({ dest: 'public/tmp' })
 
 const port = 3000
 
+const ipRequests = new Map()
+const ipAddressesToReset = new Set()
+
+const rateLimit = (req, res, next) => {
+  const ip = req.ip
+  const maxRequests = 20
+  const requestCount = ipRequests.get(ip) || 0
+
+  if (requestCount >= maxRequests) {
+    return res.status(429).send('Can only convert 20 files per day')
+  }
+  ipRequests.set(ip, requestCount + 1)
+  if (!ipAddressesToReset.has(ip)) {
+    ipAddressesToReset.add(ip)
+    setTimeout(() => {
+      ipRequests.delete(ip)
+      ipAddressesToReset.delete(ip)
+    }, 24 * 60 * 60 * 1000) // 24 hours in milliseconds
+  }
+
+  next()
+}
+
 app.use(bodyParser.urlencoded({ extended: false }))
 
 app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname, 'index.html'))
 })
 
-app.post('/uploadVideo', upload.single('video'), function (req, res) {
+app.post('/uploadVideo', upload.single('video'), rateLimit, function (
+  req,
+  res,
+) {
   console.log('req file', req.file)
   if (!req.file) {
     return res.status(400).send('No file uploaded.')
@@ -70,8 +96,6 @@ app.get('/download/:filename', (req, res) => {
 
 app.use(express.static('public'))
 
-// app.use()
-
 app.listen(port, function () {
-  console.log(`listening on port ${port}!`)
+  console.log(`-------- listening on port ${port}`)
 })
