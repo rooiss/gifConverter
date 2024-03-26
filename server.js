@@ -19,7 +19,9 @@ const rateLimit = (req, res, next) => {
   const requestCount = ipRequests.get(ip) || 0
 
   if (requestCount >= maxRequests) {
-    return res.status(429).send('Can only convert 20 files per day')
+    return res
+      .status(429)
+      .send({ status: 'You can only upload 20 files in a 24 hour period' })
   }
   ipRequests.set(ip, requestCount + 1)
   if (!ipAddressesToReset.has(ip)) {
