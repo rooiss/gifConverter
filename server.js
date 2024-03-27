@@ -11,27 +11,25 @@ const upload = multer({ dest: 'public/tmp' })
 const port = 3000
 
 const ipRequests = new Map()
-const ipAddressesToReset = new Set()
 
 const rateLimit = (req, res, next) => {
   const ip = req.ip
   const maxRequests = 20
-  const requestCount = ipRequests.get(ip) || 0
+  const requestCount = ipRequests.get(ip).count || 0
+  const currentDate = new Date()
+  const newExpiryDate = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000)
 
   if (requestCount >= maxRequests) {
     return res
       .status(429)
       .send({ status: 'You can only upload 20 files in a 24 hour period' })
   }
-  ipRequests.set(ip, requestCount + 1)
-  if (!ipAddressesToReset.has(ip)) {
-    ipAddressesToReset.add(ip)
-    setTimeout(() => {
-      ipRequests.delete(ip)
-      ipAddressesToReset.delete(ip)
-    }, 24 * 60 * 60 * 1000) // 24 hours in milliseconds
-  }
 
+  ipRequests.set(ip, { expiryDate: newExpiryDate, count: requestCount + 1 })
+
+  if (currentDate.getTime() > ipRequests.get(ip).expiryDate.getTime()) {
+    ipRequests.delete(ip)
+  }
   next()
 }
 
