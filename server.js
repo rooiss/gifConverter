@@ -15,7 +15,7 @@ const ipRequests = new Map()
 const rateLimit = (req, res, next) => {
   const ip = req.ip
   const maxRequests = 20
-  const requestCount = ipRequests.get(ip).count || 0
+  const requestCount = ipRequests.get(ip) ? ipRequests.get(ip).count : 0
   const currentDate = new Date()
   const newExpiryDate = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000)
 
@@ -43,14 +43,14 @@ app.post('/uploadVideo', upload.single('video'), rateLimit, function (
   req,
   res,
 ) {
-  console.log('req file', req.file)
   if (!req.file) {
     return res.status(400).send('No file uploaded.')
   }
-
-  const maxSize = 5 * 1024 * 1024
+  console.log('video', req.file)
+  console.log('ipRequestsMap', [...ipRequests.entries()])
+  const maxSize = 5 * 1024 * 1024 * 2
   if (req.file.size > maxSize) {
-    return res.status(400).send('File size exceeds 5MB')
+    return res.status(400).send('File size exceeds 10MB')
   }
 
   const { outputWidth, outputType } = req.body

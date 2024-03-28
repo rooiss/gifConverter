@@ -20,6 +20,7 @@ progress {
   display: none;
 }
 
+
 progress.visible {
   display: inline;
 }
@@ -44,6 +45,9 @@ form * {
   border-radius: 20px;
   border: none;
   padding: 5px 5px
+}
+#video-upload-button:hover {
+  cursor: pointer;
 }
 #drop_zone {
   border: 2px dotted lightgray;

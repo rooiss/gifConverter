@@ -1,8 +1,38 @@
-addEventListener('DOMContentLoaded', () => {
+let droppedFile
+window.addEventListener('DOMContentLoaded', () => {
+  const dropZone = document.getElementById('drop_zone')
+  dropZone.addEventListener('drop', handleVideo)
+  dropZone.addEventListener('dragover', (e) => {
+    e.preventDefault()
+  })
+
+  // assigning the button to the hidden input
+  const uploadBtn = document.getElementById('video-upload-button')
+  uploadBtn.addEventListener('click', (e) => {
+    const fileInput = document.getElementById('uploadInput')
+    e.preventDefault()
+    fileInput.click()
+  })
+
+  // hidden input that holds video file
+  const uploadInput = document.getElementById('uploadInput')
+  uploadInput.addEventListener('change', handleVideo)
+
+  // check video width
+  const width = document.getElementById('outputWidth')
+  width.addEventListener('change', (e) => {
+    const inputWidth = e.target.value
+    if (isValidVidWidth(inputWidth)) {
+      modalBtn.disabled = false
+    }
+  })
+
+  const modalBtn = document.getElementById('modalBtn')
+  modalBtn.addEventListener('click', triggerModal)
+
   const form = document.getElementById('uploadForm')
   form.addEventListener('submit', (event) => {
     event.preventDefault()
-
     const {
       outputType: { value: outputType },
       outputWidth: { value: outputWidth },
@@ -47,7 +77,8 @@ addEventListener('DOMContentLoaded', () => {
 
     // Build the payload
     const fileData = new FormData()
-    fileData.append('video', fileInput.files[0])
+    const video = droppedFile
+    fileData.append('video', video)
     fileData.append('outputType', outputType)
     fileData.append('outputWidth', outputWidth)
 
@@ -60,51 +91,31 @@ addEventListener('DOMContentLoaded', () => {
   })
 })
 
-function checkFileSize(input) {
-  const maxSize = 5 * 1024 * 1024 // 5 MB
-  let file
-  console.log('input', input)
-  if (input.files) {
-    file = input.files[0]
+window.onclick = (event) => {
+  const modal = document.getElementById('modalContainer')
+  if (event.target == modal) {
+    modal.style.display = 'none'
   }
-  if (input[0]) {
-    file = input[0]
-  }
-  const fileSize = file.size // Size in bytes
+}
 
-  if (fileSize > maxSize) {
-    alert('File size exceeds the limit (5 MB). Please choose a smaller file.')
-    input.value = '' // Reset file input to clear the selected file
+const handleVideo = (e) => {
+  e.preventDefault()
+  let video
+  if (e.dataTransfer) {
+    video = e.dataTransfer.files[0]
   } else {
-    const vidInputs = document.getElementById('vidInputs')
-    const dropzone = document.getElementById('drop_zone')
+    video = e.target.files[0]
+  }
+  const vidInputs = document.getElementById('vidInputs')
+  const dropzone = document.getElementById('drop_zone')
+  if (isValidVideoSize(video)) {
     vidInputs.classList.add('visible')
     dropzone.classList.add('disable')
-  }
-}
-
-function dropHandler(e) {
-  e.preventDefault()
-  checkFileSize(e.dataTransfer.files)
-  const fileInput = document.getElementById('uploadInput')
-  fileInput.files[0] = e.dataTransfer.files[0]
-}
-
-function dragOverHandler(e) {
-  // Prevent default behavior (Prevent file from being opened)
-  e.preventDefault()
-}
-
-function uploadButtonClick(e) {
-  e.preventDefault()
-  const fileInput = document.getElementById('uploadInput')
-  fileInput.click()
-}
-
-const checkVideoWidth = (input) => {
-  const modalBtn = document.getElementById('modalBtn')
-  if (input.value !== '' && input.value >= 10 && input.value <= 320) {
-    modalBtn.disabled = false
+    if (e.dataTransfer) droppedFile = e.dataTransfer.files[0]
+    else droppedFile = e.target.files[0]
+  } else {
+    alert('File size exceeds the limit (10 MB). Please choose a smaller file.')
+    e.target.value = ''
   }
 }
 
@@ -116,10 +127,16 @@ const triggerModal = (e) => {
   const submitInput = document.getElementById('submitInput')
   submitInput.click()
 }
-
-window.onclick = (event) => {
-  const modal = document.getElementById('modalContainer')
-  if (event.target == modal) {
-    modal.style.display = 'none'
-  }
+// validations
+const isValidVidWidth = (width) => {
+  return width !== '' && width >= 10 && width <= 320
 }
+const isValidVideoSize = (video) => {
+  const maxSize = 5 * 1024 * 1024 * 2
+  const videoSize = video.size
+  return videoSize <= maxSize
+}
+
+// const init = () => {
+
+// }
