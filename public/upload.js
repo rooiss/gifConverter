@@ -3,29 +3,31 @@
   const onDrop = (dropEvent) => {
     dropEvent.preventDefault()
     let video
-    if (e.dataTransfer) {
-      video = e.dataTransfer.files[0]
+    if (dropEvent.dataTransfer) {
+      video = dropEvent.dataTransfer.files[0]
     } else {
-      video = e.target.files[0]
+      video = dropEvent.target.files[0]
     }
     const { error, isValid } = validateVideo(video)
     if (isValid) {
       showInputs()
       // dataTransfer is for drag and drop
-      if (e.dataTransfer) droppedFile = e.dataTransfer.files[0]
+      if (dropEvent.dataTransfer) droppedFile = dropEvent.dataTransfer.files[0]
       // target files is for the selection
-      else droppedFile = e.target.files[0]
+      else droppedFile = dropEvent.target.files[0]
     } else {
       alert(`${error}`)
-      e.target.value = ''
+      dropEvent.target.value = ''
     }
   }
 
   const showInputs = () => {
     const vidInputs = document.getElementById('vidInputs')
     const dropzone = document.getElementById('drop_zone')
+    const modalBtn = document.getElementById('modalBtn')
     vidInputs.classList.add('visible')
     dropzone.classList.add('disable')
+    modalBtn.removeAttribute('hidden')
   }
 
   const validateVideo = (videoObj) => {

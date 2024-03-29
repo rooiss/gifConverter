@@ -17,12 +17,26 @@
     </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="index.css" />
     <link rel="stylesheet" href="reset.css" />
+    <link rel="stylesheet" href="index.css" />
     <title>Video Converter</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Libre+Franklin:ital,wght@0,100..900;1,100..900&family=Urbanist:wght@100;300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
-    <h1>Convert mov to gif</h1>
+    <nav>
+      <p>vidConverter</p>
+      <a href="#">Donate</a>
+      <a href="#">About</a>
+    </nav>
+    <div id="header-text">
+      <h1>vidConverter</h1>
+      <p>Convert your video files</p>
+    </div>
     <div id="modalContainer" class="modal">
       <div class="modal-content"></div>
     </div>
@@ -64,7 +78,7 @@
         </select>
       </div>
       <div>
-        <button id="modalBtn" type="button" disabled>
+        <button id="modalBtn" type="button" hidden>
           Send File
         </button>
         <input id="submitInput" type="submit" hidden />
@@ -76,6 +90,41 @@
         <output></output>
       </p>
     </form>
+    <footer>
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-section contact">
+            <h2>Contact Us</h2>
+            <p>Email</p>
+          </div>
+          <div class="footer-section links">
+            <h2>Quick Links</h2>
+            <ul>
+              <li><a href="#">Home</a></li>
+              <li><a href="#">About</a></li>
+              <li><a href="#">Contact</a></li>
+            </ul>
+          </div>
+          <div class="footer-section social">
+            <h2>Follow</h2>
+            <ul>
+              <li>
+                <a href="#"><i class="fab fa-facebook"></i></a>
+              </li>
+              <li>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+              </li>
+              <li>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        &copy; 2024 vidConverter.io All Rights Reserved.
+      </div>
+    </footer>
     <script src="/upload.js"></script>
   </body>
 </html>
