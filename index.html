@@ -29,7 +29,19 @@
   </head>
   <body>
     <div id="modal">
-      <div id="modal-container"></div>
+      <div id="modal-container">
+        <div id="download-text-container">
+          <p id="pre-download-text">
+            Your download link will be ready in 5 seconds
+          </p>
+          <p id="donate-text">
+            This tool will remain free and also free of user registration unlike
+            other converters. Part of that is because there will be ads before
+            the download. Support this service by allowing ads to be here!
+          </p>
+          <a href="" id="download-link">Download your converted video!</a>
+        </div>
+      </div>
     </div>
     <nav>
       <p>vidConverter</p>
@@ -48,13 +60,14 @@
       enctype="multipart/form-data"
       id="uploadForm"
     >
-      <div id="drop_zone">
+      <div id="drop-zone">
         <p>
           Drag your video here to upload or
           <button id="video-upload-button" type="button">
-            select a file
+            Select a file
           </button>
         </p>
+        <p id="drop-limit-text">Maximum video size is 10 MB</p>
         <input
           id="uploadInput"
           type="file"
@@ -92,36 +105,6 @@
       </p>
     </form>
     <footer>
-      <div class="container">
-        <div class="footer-content">
-          <div class="footer-section contact">
-            <h2>Contact Us</h2>
-            <p>Email</p>
-          </div>
-          <div class="footer-section links">
-            <h2>Quick Links</h2>
-            <ul>
-              <li><a href="#">Home</a></li>
-              <li><a href="#">About</a></li>
-              <li><a href="#">Contact</a></li>
-            </ul>
-          </div>
-          <div class="footer-section social">
-            <h2>Follow</h2>
-            <ul>
-              <li>
-                <a href="#"><i class="fab fa-facebook"></i></a>
-              </li>
-              <li>
-                <a href="#"><i class="fab fa-twitter"></i></a>
-              </li>
-              <li>
-                <a href="#"><i class="fab fa-instagram"></i></a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
       <div class="footer-bottom">
         &copy; 2024 vidConverter.io All Rights Reserved.
       </div>

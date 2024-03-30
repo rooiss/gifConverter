@@ -23,7 +23,7 @@
 
   const showInputs = () => {
     const vidInputs = document.getElementById('vidInputs')
-    const dropzone = document.getElementById('drop_zone')
+    const dropzone = document.getElementById('drop-zone')
     const modalBtn = document.getElementById('modalBtn')
     vidInputs.classList.add('visible')
     dropzone.classList.add('disable')
@@ -44,7 +44,7 @@
   }
 
   window.addEventListener('DOMContentLoaded', () => {
-    const dropZone = document.getElementById('drop_zone')
+    const dropZone = document.getElementById('drop-zone')
     dropZone.addEventListener('drop', onDrop)
     dropZone.addEventListener('dragover', (e) => e.preventDefault())
 
@@ -126,6 +126,25 @@
       // Theoretically, event listeners could be set after the open() call
       // but browsers are buggy here
       xhr.open('POST', '/uploadVideo', true)
+
+      // Set up onload event listener
+      xhr.onload = () => {
+        if (xhr.status === 200) {
+          // Parse JSON response
+          const response = JSON.parse(xhr.responseText)
+          // Get the link to the converted GIF
+          const gifUrl = `/download/${response.filename}`
+
+          setTimeout(() => {
+            downloadLink = document.getElementById('download-link')
+            downloadLink.setAttribute('href', gifUrl)
+            downloadLink.style.display = 'block'
+            document.getElementById('pre-download-text').style.display = 'none'
+          }, 5000)
+        } else {
+          console.error('Upload failed with status:', xhr.status)
+        }
+      }
 
       // Note that the event listener must be set before sending (as it is a preflighted request)
       xhr.send(fileData)

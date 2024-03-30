@@ -62,17 +62,18 @@ app.post('/uploadVideo', upload.single('video'), rateLimit, function (
     return res.status(400).send('output width or type field must be filled out')
   }
 
-  const fileName = req.file.filename
-  const outputFileBasename = `/uploads/${req.file.filename}.${outputType}`
+  const filename = `${req.file.filename}.${outputType}`
+  const outputFileBasename = `/download/${filename}`
   const inputFilePath = req.file.path
   const outputFilePath = path.join(__dirname, 'public', outputFileBasename)
-  // const link = `${req.protocol}://${req.get('host')}`
+
+  console.log('filename', filename)
 
   ffmpeg(inputFilePath)
     .output(outputFilePath)
     .outputOptions('-vf', `fps=10,scale=${outputWidth}:-1:flags=lanczos`)
     .on('end', () => {
-      res.json({ fileName })
+      res.json({ filename })
       fs.unlink(inputFilePath, (err) => {
         if (err) throw err
         console.log(`${inputFilePath} was deleted`)
@@ -86,12 +87,14 @@ app.post('/uploadVideo', upload.single('video'), rateLimit, function (
 })
 
 app.get('/download/:filename', (req, res) => {
-  const filePath = path.join(__dirname, 'uploads', req.params.filename)
-  res.setHeader(
-    'Content-Disposition',
-    'attachment; filename=' + req.params.filename,
-  )
-  res.download(filePath)
+  const { filename } = req.params
+  const filePath = path.resolve(__dirname, 'public', 'download', filename)
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).json({ error: 'File not found' })
+  }
+  res.setHeader('Content-Disposition', 'attachment; filename=' + filename)
+  res.setHeader('Content-Type', 'image/gif')
+  fs.createReadStream(filePath).pipe(res)
 })
 
 app.use(express.static('public'))
