@@ -6,7 +6,7 @@ const bodyParser = require('body-parser')
 const fs = require('fs')
 
 const app = express()
-const upload = multer({ dest: 'public/tmp' })
+const upload = multer({ dest: 'public/uploadVideo' })
 
 const port = 3000
 
@@ -66,8 +66,6 @@ app.post('/uploadVideo', upload.single('video'), rateLimit, function (
   const outputFileBasename = `/download/${filename}`
   const inputFilePath = req.file.path
   const outputFilePath = path.join(__dirname, 'public', outputFileBasename)
-
-  console.log('filename', filename)
 
   ffmpeg(inputFilePath)
     .output(outputFilePath)
