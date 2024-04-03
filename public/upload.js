@@ -123,16 +123,12 @@
       fileData.append('outputType', outputType)
       fileData.append('outputWidth', outputWidth)
 
-      // Theoretically, event listeners could be set after the open() call
-      // but browsers are buggy here
       xhr.open('POST', '/uploadVideo', true)
 
       // Set up onload event listener
       xhr.onload = () => {
         if (xhr.status === 200) {
-          // Parse JSON response
           const response = JSON.parse(xhr.responseText)
-          // Get the link to the converted GIF
           const gifUrl = `/download/${response.filename}`
 
           setTimeout(() => {
