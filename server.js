@@ -67,17 +67,22 @@ app.post('/uploadVideo', upload.single('video'), rateLimit, function (
   const inputFilePath = req.file.path
   const outputFilePath = path.join(__dirname, 'public', outputFileBasename)
 
+  const deleteTmpFile = (inputFilePath) => {
+    fs.unlink(inputFilePath, (err) => {
+      if (err) throw err
+      console.log(`${inputFilePath} was deleted`)
+    })
+  }
+
   ffmpeg(inputFilePath)
     .output(outputFilePath)
     .outputOptions('-vf', `fps=10,scale=${outputWidth}:-1:flags=lanczos`)
     .on('end', () => {
       res.json({ filename })
-      fs.unlink(inputFilePath, (err) => {
-        if (err) throw err
-        console.log(`${inputFilePath} was deleted`)
-      })
+      deleteTmpFile(inputFilePath)
     })
     .on('error', (err) => {
+      deleteTmpFile(inputFilePath)
       console.error('Error during conversion:', err)
       res.status(500).send('Error during conversion.')
     })
