@@ -6,7 +6,7 @@ const bodyParser = require('body-parser')
 const fs = require('fs')
 
 const app = express()
-const upload = multer({ dest: 'public/uploadVideo' })
+const upload = multer({ dest: 'public/tmp' })
 
 const port = 3000
 
