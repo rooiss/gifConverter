@@ -15,6 +15,10 @@
 
       gtag('config', 'G-QMRCDR890Q')
     </script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Libre+Franklin:ital,wght@0,100..900;1,100..900&family=Urbanist:wght@100;300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="reset.css" />
@@ -22,49 +26,23 @@
     <title>Video Converter</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Libre+Franklin:ital,wght@0,100..900;1,100..900&family=Urbanist:wght@100;300;400;500;600;700;800;900&display=swap"
-      rel="stylesheet"
-    />
     <meta name="google-adsense-account" content="ca-pub-7245641369814981" />
+    <link rel="icon" href="/assets/favicon.ico" type="image/x-icon" />
   </head>
   <body>
-    <div id="modal">
-      <div id="modal-container">
-        <div id="download-text-container">
-          <p id="pre-download-text">
-            Your download link will be ready in 5 seconds
-          </p>
-          <p id="donate-text">
-            This tool will remain free and free of user registration. Part of
-            that is because there will be ads before the download. Support this
-            service by allowing ads to be here!
-          </p>
-          <a href="" id="download-link">Download your converted video!</a>
-        </div>
+    <script id="step-1-template" type="text/template">
+      <div id="instruction-container">
+        <ol id="instruction-list">
+          <li>Select Input File</li>
+          <li class="disabled-text">Choose Output Settings</li>
+          <li class="disabled-text">Upload and Process</li>
+          <li class="disabled-text">Download Result</li>
+        </ol>
       </div>
-    </div>
-    <nav>
-      <p>vidConverter</p>
-      <a href="#">Donate</a>
-      <a href="#">About</a>
-    </nav>
-    <div id="header-text">
-      <h1>vidConverter</h1>
-      <p>Convert your video files</p>
-    </div>
-
-    <form
-      name="uploadForm"
-      action="/uploadVideo"
-      method="post"
-      enctype="multipart/form-data"
-      id="uploadForm"
-    >
-      <div id="drop-zone">
+      <div id="drop-zone" class="drop-zone">
         <p>
           Drag your video here to upload or
-          <button id="video-upload-button" type="button">
+          <button id="video-upload-button" type="button" class="primary-button">
             Select a file
           </button>
         </p>
@@ -77,34 +55,87 @@
           hidden
         />
       </div>
-      <div class="vid-inputs" id="vidInputs">
-        <label>width of gif</label>
-        <input
-          id="outputWidth"
-          type="number"
-          name="outputWidth"
-          min="10"
-          max="320"
-          value="320"
-        />
-        <label>output file type</label>
-        <select name="outputType" id="outputTypeSelect">
-          <option value="gif" selected>gif</option>
-        </select>
+    </script>
+    <script id="step-1b-template" type="text/template">
+        <div id="instruction-container">
+          <ol id="instruction-list">
+            <li>Select Input File</li>
+            <li class="disabled-text">Choose Output Settings</li>
+            <li class="disabled-text">Upload and Process</li>
+            <li class="disabled-text">Download Result</li>
+          </ol>
+        </div>
+        <div id="queued-video-container" class="drop-zone">
+            <img id="thumbnail" src="#" alt="Thumbnail" />
+            <div id="queued-video-text">
+              <p>{{name}}</p>
+              <p>{{type}}</p>
+              <p>{{size}}</p>
+            </div>
+            <button id='clear-video-button'>X</button>
+        </div>
+      <button id="next-step-button" class="primary-button">Continue</button>
+    </script>
+    <script id="step-2-template" type="text/template">
+      <div id="instruction-container">
+        <ol id="instruction-list">
+          <li class="success-text">Select Input File</li>
+          <li>Choose Output Settings</li>
+          <li class="disabled-text">Upload and Process</li>
+          <li class="disabled-text">Download Result</li>
+        </ol>
       </div>
-      <div>
-        <button id="modalBtn" type="button" hidden>
-          Send File
-        </button>
-        <input id="submitInput" type="submit" hidden />
+        <div id="vid-inputs-container" class='drop-zone'>
+            <div class="vid-inputs-pair">
+              <label>width</label>
+              <input
+              id="outputWidth"
+              type="number"
+              name="outputWidth"
+              min="10"
+              max="480"
+              value="320"
+              />
+            </div>
+            <div class="vid-inputs-pair">
+              <label>output</label>
+              <select name="outputType" id="outputTypeSelect">
+              <option value="gif" selected>gif</option>
+              </select>
+            </div>
+            <div class="vid-inputs-pair">
+              <label>fps</label>
+              <input id="fps" type="number" max='30' min='1'/>
+            </div>
+          </div>
+        <p id="error" class="error-text"></p>
+      <button id="upload-button" class="primary-button">Continue</button>
+    </script>
+    <script id="step-3-template" type="text/template">
+      <div id="instruction-container">
+        <ol id="instruction-list">
+          <li class="success-text">Select Input File</li>
+          <li class="success-text">Choose Output Settings</li>
+          <li>Upload and Process</li>
+          <li class="disabled-text">Download Result</li>
+        </ol>
       </div>
-      <p>
-        <progress />
-      </p>
-      <p>
-        <output></output>
-      </p>
-    </form>
+      <div id="upload-status-container" class="drop-zone">
+        <p><output></output></p>
+      </div>
+    </script>
+    <nav>
+      <p>vidConverter</p>
+      <a href="#">Donate</a>
+      <a href="#">About</a>
+    </nav>
+    <main>
+      <div id="header-text">
+        <h1>vidConverter</h1>
+        <p>Convert video files like .MOV files into .GIFs and other formats</p>
+      </div>
+      <div id="action-area"></div>
+    </main>
     <footer>
       <div class="footer-bottom">
         &copy; 2024 vidConverter.io All Rights Reserved.

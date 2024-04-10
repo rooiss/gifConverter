@@ -53,9 +53,9 @@ app.post('/uploadVideo', upload.single('video'), rateLimit, function (
     return res.status(400).send('File size exceeds 10MB')
   }
 
-  const { outputWidth, outputType } = req.body
-  const maxWidth = 320
-  if (outputType > 320)
+  const { outputWidth, outputType, outputFps } = req.body
+  const maxWidth = 480
+  if (outputType > maxWidth)
     return res.status(400).send(`output width exceeds max width of ${maxWidth}`)
 
   if (outputWidth === '' || outputType === '') {
@@ -76,7 +76,10 @@ app.post('/uploadVideo', upload.single('video'), rateLimit, function (
 
   ffmpeg(inputFilePath)
     .output(outputFilePath)
-    .outputOptions('-vf', `fps=10,scale=${outputWidth}:-1:flags=lanczos`)
+    .outputOptions(
+      '-vf',
+      `fps=${outputFps},scale=${outputWidth}:-1:flags=lanczos`,
+    )
     .on('end', () => {
       res.json({ filename })
       deleteTmpFile(inputFilePath)
