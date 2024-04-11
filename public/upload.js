@@ -5,15 +5,102 @@
   const OUTPUT_TYPES = new Set('gif')
   const vidOutput = {
     type: 'gif',
+    width: 320,
+    fps: 10,
   }
 
-  // Create a function to interpolate variables into the template
+  const STEPS = {
+    '1': {
+      init: (template) => {
+        // render the html
+        const data = {}
+        const newMarkup = interpolate(template, data)
+        document.getElementById('action-area').innerHTML = newMarkup
+        // add event listeners to elements in the template
+        const dropZone = document.getElementById('drop-zone')
+        dropZone.addEventListener('drop', onDrop)
+        dropZone.addEventListener('dragover', (e) => e.preventDefault())
+
+        // assigning the button to the hidden input
+        document
+          .getElementById('video-upload-button')
+          .addEventListener('click', onUploadClick)
+      },
+      templateId: 'step-1-template',
+    },
+    '1b': {
+      init: (template) => {
+        // add event listeners to elements in the template
+        const { name: fileName, size: fileSize, type: fileType } = droppedFile
+        const data = {
+          type: fileType,
+          name: fileName,
+          size: bytesToMegabytes(fileSize),
+        }
+        const newMarkup = interpolate(template, data)
+        document.getElementById('action-area').innerHTML = newMarkup
+
+        document
+          .getElementById('clear-video-button')
+          .addEventListener('click', clearQueuedVideo)
+        createThumbnail()
+        document
+          .getElementById('next-step-button')
+          .addEventListener('click', nextStep)
+      },
+      templateId: 'step-1b-template',
+    },
+    '2': {
+      init: (template) => {
+        // add event listeners to elements in the template
+        const data = {}
+        const newMarkup = interpolate(template, data)
+        document.getElementById('action-area').innerHTML = newMarkup
+
+        // validations
+        // width
+        document
+          .getElementById('outputWidth')
+          .addEventListener('input', widthHandler)
+        // output type
+        document
+          .getElementById('outputTypeSelect')
+          .addEventListener('change', typeHandler)
+        // fps
+        document.getElementById('fps').addEventListener('change', fpsHandler)
+
+        document
+          .getElementById('upload-button')
+          .addEventListener('click', renderUploadStep)
+      },
+      templateId: 'step-2-template',
+    },
+    '3': {
+      init: (template) => {
+        const data = {}
+        const newMarkup = interpolate(template, data)
+        document.getElementById('action-area').innerHTML = newMarkup
+        handleUpload(vidOutput)
+      },
+      templateId: 'step-3-template',
+    },
+    '4': {
+      init: (template, data) => {
+        // const { gifUrl } = data
+        const newMarkup = interpolate(template, data)
+        document.getElementById('action-area').innerHTML = newMarkup
+      },
+      templateId: 'step-4-template',
+    },
+  }
+  // interpolate variables into the template
   const interpolate = (template, data) => {
+    ;``
     return template.replace(/\{\{(\w+)\}\}/g, function (match, key) {
       return data[key] || ''
     })
   }
-  function renderStep(stepNumber, data) {
+  const renderStep = (stepNumber, data) => {
     const { init, templateId } = STEPS[stepNumber]
     const template = document.getElementById(templateId).innerHTML
     currentStep = stepNumber
@@ -116,88 +203,6 @@
     uploadInput.click()
   }
 
-  const STEPS = {
-    '1': {
-      init: (template) => {
-        // render the html
-        const data = {}
-        const newMarkup = interpolate(template, data)
-        document.getElementById('action-area').innerHTML = newMarkup
-        // add event listeners to elements in the template
-        const dropZone = document.getElementById('drop-zone')
-        dropZone.addEventListener('drop', onDrop)
-        dropZone.addEventListener('dragover', (e) => e.preventDefault())
-
-        // assigning the button to the hidden input
-        document
-          .getElementById('video-upload-button')
-          .addEventListener('click', onUploadClick)
-      },
-      templateId: 'step-1-template',
-    },
-    '1b': {
-      init: (template) => {
-        // add event listeners to elements in the template
-        const { name: fileName, size: fileSize, type: fileType } = droppedFile
-        const data = {
-          type: fileType,
-          name: fileName,
-          size: bytesToMegabytes(fileSize),
-        }
-        const newMarkup = interpolate(template, data)
-        document.getElementById('action-area').innerHTML = newMarkup
-
-        document
-          .getElementById('clear-video-button')
-          .addEventListener('click', clearQueuedVideo)
-        createThumbnail()
-        document
-          .getElementById('next-step-button')
-          .addEventListener('click', nextStep)
-      },
-      templateId: 'step-1b-template',
-    },
-    '2': {
-      init: (template) => {
-        // add event listeners to elements in the template
-        const data = {}
-        const newMarkup = interpolate(template, data)
-        document.getElementById('action-area').innerHTML = newMarkup
-
-        // validations
-        // width
-        document
-          .getElementById('outputWidth')
-          .addEventListener('input', widthHandler)
-        // output type
-        document
-          .getElementById('outputTypeSelect')
-          .addEventListener('change', typeHandler)
-        // fps
-        document.getElementById('fps').addEventListener('change', fpsHandler)
-
-        document
-          .getElementById('upload-button')
-          .addEventListener('click', renderUploadStep)
-      },
-      templateId: 'step-2-template',
-    },
-    '3': {
-      init: (template) => {
-        const data = {}
-        const newMarkup = interpolate(template, data)
-        document.getElementById('action-area').innerHTML = newMarkup
-        handleUpload(vidOutput)
-      },
-      templateId: 'step-3-template',
-    },
-    '4': {
-      init: () => {
-        // add event listeners to elements in the template
-      },
-      templateId: 'step-4-template',
-    },
-  }
   const setVidOutput = (type, val) => {
     vidOutput[type] = val
   }
@@ -211,7 +216,7 @@
     const log = document.querySelector('output')
 
     xhr.upload.addEventListener('progress', (event) => {
-      log.textContent = `Uploading (${(
+      log.textContent = `Your video is uploading (${(
         (event.loaded / event.total) *
         100
       ).toFixed(2)}%)…`
@@ -219,7 +224,7 @@
 
     xhr.upload.addEventListener('loadend', (event) => {
       if (event.loaded !== 0) {
-        log.textContent = 'Upload finished.'
+        log.textContent = 'Processing conversion...'
       }
     })
 
@@ -243,22 +248,15 @@
     xhr.open('POST', '/uploadVideo', true)
 
     // Set up onload event listener
-    // xhr.onload = () => {
-    //   if (xhr.status === 200) {
-    //     const response = JSON.parse(xhr.responseText)
-    //     const gifUrl = `/download/${response.filename}`
-
-    //     setTimeout(() => {
-    //       downloadLink = document.getElementById('download-link')
-    //       downloadLink.setAttribute('href', gifUrl)
-    //       downloadLink.style.display = 'block'
-    //       document.getElementById('pre-download-text').style.display = 'none'
-    //     }, 5000)
-    //   } else {
-    //     console.error('Upload failed with status:', xhr.status)
-    //   }
-    // }
-
+    xhr.onload = () => {
+      if (xhr.status === 200) {
+        const response = JSON.parse(xhr.responseText)
+        const gifUrl = `/download/${response.filename}`
+        renderStep('4', { gifUrl })
+      } else {
+        console.error('Upload failed with status:', xhr.status)
+      }
+    }
     // Note that the event listener must be set before sending (as it is a preflighted request)
     xhr.send(fileData)
   }
@@ -326,3 +324,39 @@
     renderStep('1')
   })
 })()
+
+{
+  /* html for copy to clipboard button
+ <button id="copy-to-clipboard-btn" class="secondary-btn">copy to clipboard</button> 
+ 
+ // get the button and assign copyToClipboard curried fn
+ document.getElementById('copy-to-clipboard-btn').addEventListener('click', copyToClipboard(gifUrl))
+ 
+   const copyToClipboard = (gifUrl) => {
+    return function () {
+      fetch(gifUrl)
+        .then((response) => response.blob())
+        .then((blob) => {
+          // Creating a new FileReader to read the blob as Data URL
+          const reader = new FileReader()
+          reader.onload = function (event) {
+            // Writing the Data URL to the clipboard
+            navigator.clipboard.writeText(event.target.result).then(
+              function () {
+                // Alerting the user that the GIF has been copied
+                alert('GIF copied to clipboard!')
+              },
+              function (error) {
+                console.error('Unable to write to clipboard. Error:', error)
+              },
+            )
+          }
+          reader.readAsDataURL(blob)
+        })
+        .catch((error) => {
+          console.error('Unable to fetch GIF. Error:', error)
+        })
+    }
+  }
+ */
+}
