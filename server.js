@@ -58,8 +58,14 @@ app.post('/uploadVideo', upload.single('video'), rateLimit, function (
   if (outputType > maxWidth)
     return res.status(400).send(`output width exceeds max width of ${maxWidth}`)
 
-  if (outputWidth === '' || outputType === '') {
-    return res.status(400).send('output width or type field must be filled out')
+  if (outputWidth === '') {
+    return res.status(400).send('width field must be filled out')
+  }
+  if (outputType === '') {
+    return res.status(400).send('type field must be filled out')
+  }
+  if (outputFps === '') {
+    return res.status(400).send('fps field must be filled out')
   }
 
   const filename = `${req.file.filename}.${outputType}`

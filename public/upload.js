@@ -1,13 +1,10 @@
 ;(function () {
-  // global variable to hold the file
+  // global variables
+  // hold the file
   let droppedFile
   let currentStep = 1
-  const OUTPUT_TYPES = new Set('gif')
-  const vidOutput = {
-    type: 'gif',
-    width: 320,
-    fps: 10,
-  }
+  const OUTPUT_TYPES = new Set()
+  OUTPUT_TYPES.add('gif')
 
   const STEPS = {
     '1': {
@@ -58,15 +55,12 @@
         document.getElementById('action-area').innerHTML = newMarkup
 
         // validations
-        // width
         document
           .getElementById('outputWidth')
           .addEventListener('input', widthHandler)
-        // output type
         document
           .getElementById('outputTypeSelect')
           .addEventListener('change', typeHandler)
-        // fps
         document.getElementById('fps').addEventListener('change', fpsHandler)
 
         document
@@ -76,26 +70,26 @@
       templateId: 'step-2-template',
     },
     '3': {
-      init: (template) => {
-        const data = {}
+      init: (template, data) => {
         const newMarkup = interpolate(template, data)
         document.getElementById('action-area').innerHTML = newMarkup
-        handleUpload(vidOutput)
+        handleUpload(data)
       },
       templateId: 'step-3-template',
     },
     '4': {
       init: (template, data) => {
-        // const { gifUrl } = data
         const newMarkup = interpolate(template, data)
         document.getElementById('action-area').innerHTML = newMarkup
+        document
+          .getElementById('start-over-btn')
+          .addEventListener('click', startOverHandler)
       },
       templateId: 'step-4-template',
     },
   }
   // interpolate variables into the template
   const interpolate = (template, data) => {
-    ;``
     return template.replace(/\{\{(\w+)\}\}/g, function (match, key) {
       return data[key] || ''
     })
@@ -192,6 +186,11 @@
     renderStep('1')
   }
 
+  const startOverHandler = () => {
+    clearQueuedVideo()
+    currentStep = 1
+  }
+
   const nextStep = () => {
     renderStep('2')
   }
@@ -203,12 +202,18 @@
     uploadInput.click()
   }
 
-  const setVidOutput = (type, val) => {
-    vidOutput[type] = val
-  }
   const renderUploadStep = () => {
-    const errorText = document.getElementById('error').textContent
-    if (errorText === '' || errorText === null) renderStep('3')
+    const vidOutputs = getVidOutputs()
+    let { isValid, errorMessages } = validateAllOutputs(vidOutputs)
+    return isValid ? renderStep('3', vidOutputs) : showError(errorMessages)
+  }
+
+  const getVidOutputs = () => {
+    const width = document.getElementById('outputWidth').value
+    const fps = document.getElementById('fps').value
+    const e = document.getElementById('outputTypeSelect')
+    const type = e.options[e.selectedIndex].value
+    return { type, fps, width }
   }
   const handleUpload = (vidOutput) => {
     const xhr = new XMLHttpRequest()
@@ -260,6 +265,20 @@
     // Note that the event listener must be set before sending (as it is a preflighted request)
     xhr.send(fileData)
   }
+
+  const validateAllOutputs = (vidOutputs) => {
+    const { width, type, fps } = vidOutputs
+    const { isValid: isValidWidth, error: errorWidth } = isValidVidWidth(width)
+    const { isValid: isValidType, error: errorType } = isValidVidType(type)
+    const { isValid: isValidFPS, error: errorFps } = isValidFps(fps)
+    const errorMessages = [errorFps, errorType, errorWidth]
+      .filter((e) => e !== '')
+      .join(', ')
+    const isValid = [isValidWidth, isValidType, isValidFPS].every(
+      (valid) => valid === true,
+    )
+    return { isValid, errorMessages }
+  }
   const isValidVidWidth = (width) => {
     if (width === '') {
       return { error: `width can't be blank`, isValid: false }
@@ -268,7 +287,6 @@
     } else if (width > 480) {
       return { error: `width must be less than 480px`, isValid: false }
     } else {
-      setVidOutput('width', width)
       return { error: '', isValid: true }
     }
   }
@@ -284,10 +302,9 @@
   const removeError = () => {
     document.getElementById('error').textContent = null
   }
-
   const isValidVidType = (type) => {
-    OUTPUT_TYPES.has(type)
-      ? ({ error: '', isValid: true }, setVidOutput('type', type))
+    return OUTPUT_TYPES.has(type)
+      ? { error: '', isValid: true }
       : { error: 'this type is not supported', isValid: false }
   }
   const typeHandler = (e) => {
@@ -304,7 +321,6 @@
     } else if (fps > 30) {
       return { error: `fps must be less than 30`, isValid: false }
     } else {
-      setVidOutput('fps', fps)
       return { error: '', isValid: true }
     }
   }

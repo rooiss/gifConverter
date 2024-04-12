@@ -61,23 +61,22 @@ nav a:hover {
   cursor: pointer;
 }
 /* all buttons will look like this */
-.primary-button {
+.primary-btn {
   border-radius: 20px;  
   padding: 9px 12px;
   border: none;
-  background-color: #ff3b3f;
+  background-color: #8DC5E5;
   color: white;
   font-size: 16px;
-  opacity: 90%;
 }
-.primary-button:hover {
+.primary-btn:hover {
   cursor: pointer;
 }
 .secondary-btn {
   border-radius: 20px;  
   padding: 9px 12px;
   border: none;
-  background-color: #8DC5E5;
+  background-color: #ff3b3f;
   color: #fff;
   font-size: 16px;
 }
@@ -126,10 +125,10 @@ progress.visible {
 }
 #vid-inputs-container {
   width: 500px;
-  height: 200px;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
+  padding: 25px 0px;
 }
 #queued-video-container {
   width: 500px;

@@ -42,8 +42,8 @@
       <div id="drop-zone" class="drop-zone">
         <p>
           Drag your video here to upload or
-          <button id="video-upload-button" type="button" class="primary-button">
-            Select a file
+          <button id="video-upload-button" type="button" class="primary-btn">
+            Browse to Upload
           </button>
         </p>
         <p id="drop-limit-text">Maximum video size is 10 MB</p>
@@ -74,7 +74,7 @@
             </div>
             <button id='clear-video-button'>X</button>
         </div>
-      <button id="next-step-button" class="primary-button">Continue</button>
+      <button id="next-step-button" class="primary-btn">Continue</button>
     </script>
     <script id="step-2-template" type="text/template">
       <div id="instruction-container">
@@ -87,7 +87,7 @@
       </div>
         <div id="vid-inputs-container" class='drop-zone'>
             <div class="vid-inputs-pair">
-              <label>width</label>
+              <label>Width</label>
               <input
               id="outputWidth"
               type="number"
@@ -96,20 +96,21 @@
               max="480"
               value="320"
               />
+              <span>px</span>
             </div>
             <div class="vid-inputs-pair">
-              <label>output</label>
+              <label>Output</label>
               <select name="outputType" id="outputTypeSelect">
               <option value="gif" selected>gif</option>
               </select>
             </div>
             <div class="vid-inputs-pair">
-              <label>fps</label>
+              <label>FPS</label>
               <input id="fps" type="number" max='30' min='1'/>
             </div>
           </div>
         <p id="error" class="error-text"></p>
-      <button id="upload-button" class="primary-button">Continue</button>
+      <button id="upload-button" class="primary-btn">Continue</button>
     </script>
     <script id="step-3-template" type="text/template">
       <div id="instruction-container">
@@ -145,10 +146,11 @@
           <p>If you are using an ad blocker, consider disabling it for this site.</p>
         </div>
         <div id="download-btns">
-          <button id="download-computer-btn" class="secondary-btn"><a id="download-btn" class="all-links" href={{gifUrl}}>download to computer</a></button>
+          <button id="download-computer-btn" class="primary-btn"><a id="download-btn" class="all-links" href={{gifUrl}}>Download</a></button>
         </div>
         <div id="ad-container">THE AD GOES HERE</div>
       </div>
+      <button id='start-over-btn' class="secondary-btn">Start Over</button>
     </script>
     <nav>
       <p>vidConverter</p>
