@@ -8,8 +8,8 @@
   const COMPLETED_ICON = `
       <svg
         fill="#000000"
-        width="18px"
-        height=18px"
+        width="18"
+        height="18"
         viewBox="0 0 96 96"
         xmlns="http://www.w3.org/2000/svg"
       >
