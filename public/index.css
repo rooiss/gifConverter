@@ -52,11 +52,8 @@ nav a:hover {
 }
 
 #clear-video-button {
-  border-radius: 15px;  
-  padding: 7px 10px;
   border: none;
-  background-color: #ff3b3f;
-  color: white;
+  background: none;
 }
 #clear-video-button:hover {
   cursor: pointer;
