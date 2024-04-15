@@ -27,6 +27,7 @@ nav {
 }
 nav > * {
   padding: 14px 40px; /* Padding for each link */
+  margin: 16px 0px;
 }
 nav a {
   color: black;
@@ -47,8 +48,23 @@ nav a:hover {
   align-items: center;
 }
 #header-text > * {
-  margin: 0;
+  margin: 0px;
   padding: 5px 0px;
+}
+
+.logo {
+  margin: 0px;
+  font-family: "Rubik";
+  font-weight: 700;
+  font-size: 3.5em;
+}
+#logo {
+  color: #333;
+  opacity: .8;
+}
+#logo-converter {
+  color: #ff3b3f;
+  opacity: .9;
 }
 
 #clear-video-button {
