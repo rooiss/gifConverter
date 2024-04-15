@@ -26,12 +26,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="reset.css" />
     <link rel="stylesheet" href="index.css" />
-    <title>Video Converter</title>
+    <title>Free Video Converter</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <meta name="google-adsense-account" content="ca-pub-7245641369814981" />
     <link rel="icon" href="/assets/favicon.ico" type="image/x-icon" />
-    <meta property="og:title" content="Video Converter" />
+    <meta property="og:title" content="Free Video Converter" />
     <meta
       property="og:description"
       content="Convert your videos to any format, no signup required"
@@ -116,7 +116,7 @@
             <div class="vid-inputs-pair">
               <label>Output</label>
               <select name="outputType" id="outputTypeSelect">
-              <option value="gif" selected>gif</option>
+              {{options}}
               </select>
             </div>
             <div class="vid-inputs-pair">
@@ -167,7 +167,6 @@
       </div>
       <button id='start-over-btn' class="primary-btn">Convert another file</button>
     </script>
-    <!-- prettier-ignore -->
     <nav>
       <a href="#">Donate</a>
       <a href="#">About</a>
@@ -178,7 +177,10 @@
         <div id="logo-text-container">
           <span id="logo" class="logo">VID</span>&nbsp;<span id="logo-converter" class="logo">CONVERTER</span>
         </div>
-        <p>Convert video files like .MOV files into .GIFs and other formats</p>
+        <p>
+          Convert video files like .MOV files into .GIFs and other formats for
+          free
+        </p>
       </div>
       <div id="action-area"></div>
     </main>

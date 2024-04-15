@@ -3,8 +3,8 @@
   // holds the file
   let droppedFile
   let currentStep = 1
-  const OUTPUT_TYPES = new Set()
-  OUTPUT_TYPES.add('gif')
+  const OUTPUTS = ['gif', 'mp4']
+  const OUTPUT_TYPES = new Set(OUTPUTS)
   const COMPLETED_ICON = `
       <svg
         fill="#000000"
@@ -62,12 +62,10 @@
       templateId: 'step-1b-template',
     },
     '2': {
-      init: (template) => {
+      init: (template, data) => {
         // add event listeners to elements in the template
-        const data = { completeIcon: COMPLETED_ICON }
         const newMarkup = interpolate(template, data)
         document.getElementById('action-area').innerHTML = newMarkup
-
         // validations
         document
           .getElementById('outputWidth')
@@ -155,7 +153,13 @@
     const videoSize = video.size
     return videoSize <= maxSize
   }
-
+  const parseOutputs = () => {
+    let str = ``
+    const temp = [...OUTPUT_TYPES.values()].forEach((o) => {
+      str = str.concat(`<option value="${o}">${o}</option>`)
+    })
+    return str
+  }
   const createThumbnail = () => {
     if (!droppedFile) return
     const thumbnail = document.getElementById('thumbnail')
@@ -210,7 +214,9 @@
   }
 
   const nextStep = () => {
-    renderStep('2')
+    let options = parseOutputs()
+    const data = { completeIcon: COMPLETED_ICON, options }
+    renderStep('2', data)
   }
 
   const onUploadClick = (e) => {

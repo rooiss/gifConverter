@@ -79,23 +79,40 @@ app.post('/uploadVideo', upload.single('video'), rateLimit, function (
       console.log(`${inputFilePath} was deleted`)
     })
   }
-
-  ffmpeg(inputFilePath)
-    .output(outputFilePath)
-    .outputOptions(
-      '-vf',
-      `fps=${outputFps},scale=${outputWidth}:-1:flags=lanczos`,
-    )
-    .on('end', () => {
-      res.json({ filename })
-      deleteTmpFile(inputFilePath)
-    })
-    .on('error', (err) => {
-      deleteTmpFile(inputFilePath)
-      console.error('Error during conversion:', err)
-      res.status(500).send('Error during conversion.')
-    })
-    .run()
+  if (outputType === 'mp4') {
+    ffmpeg(inputFilePath)
+      .output(outputFilePath)
+      .size('640x360') // Set output resolution to 640x360
+      .fps(outputFps) // Set output frame rate to 30 fps
+      .format('mp4') // Specify MP4 as the output format
+      .on('end', () => {
+        res.json({ filename })
+        deleteTmpFile(inputFilePath)
+      })
+      .on('error', (err) => {
+        deleteTmpFile(inputFilePath)
+        console.error('Error during conversion:', err)
+        res.status(500).send('Error during conversion.')
+      })
+      .run()
+  } else if (outputType === 'gif') {
+    ffmpeg(inputFilePath)
+      .output(outputFilePath)
+      .outputOptions(
+        '-vf',
+        `fps=${outputFps},scale=${outputWidth}:-1:flags=lanczos`,
+      )
+      .on('end', () => {
+        res.json({ filename })
+        deleteTmpFile(inputFilePath)
+      })
+      .on('error', (err) => {
+        deleteTmpFile(inputFilePath)
+        console.error('Error during conversion:', err)
+        res.status(500).send('Error during conversion.')
+      })
+      .run()
+  }
 })
 
 app.get('/download/:filename', (req, res) => {
