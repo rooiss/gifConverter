@@ -359,6 +359,12 @@
     let newStr = (bytes / 1000000).toFixed(2).toString()
     return `${newStr} MB`
   }
+  // const isMobile = () => {
+  //   return window.innerWidth <= 768
+  // }
+
+  // window.addEventListener('resize', renderContent)
+
   window.addEventListener('DOMContentLoaded', () => {
     // init hydrate
     renderStep('1')

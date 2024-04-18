@@ -26,12 +26,12 @@ nav {
   align-items: center;
 }
 nav > * {
-  padding: 14px 40px; /* Padding for each link */
+  padding: 14px 40px; 
   margin: 16px 0px;
 }
 nav a {
   color: black;
-  text-decoration: none; /* Remove default underline */
+  text-decoration: none;
   transition: background-color 0.4s;
   border-radius: 30px;
 }
@@ -192,6 +192,64 @@ progress.visible {
   color: #ff3b3f;  
   font-weight: bold;
 }
+.profile-pic-container {
+  position: fixed;
+  bottom: 40px; /* Adjust as needed */
+  right: 350px; /* Adjust as needed */
+  border-radius: 50%; /* To make it circular */
+  background-color: #1489F5; /* Blue color, change as needed */
+  padding: 10px;
+  width: 100px; /* Adjust as needed */
+  height: 100px; /* Adjust as needed */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3); 
+  z-index: 9999; /* Ensure it's above other elements */
+}
+
+.profile-pic-icon {
+  width: 100px; 
+  height: 100px; 
+  border-radius: 50%; 
+  background-image: url('../assets/profile.jpg'); 
+  background-size: cover; /* Ensure the image covers the container */
+  background-position: center; /* Center the image */
+  overflow: hidden; /* Ensure the image doesn't overflow */
+}
+.blurb-txt-container {
+  position: fixed;
+  bottom: 100px; 
+  right: 15px;
+  border-radius: 30px;
+  padding: 20px 25px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3); 
+  /* border: #fff; */
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  width: 340px;
+}
+.blurb-txt {
+  display: flex;
+  flex-direction: column;
+}
+.blurb-first {
+  text-align: left;
+}
+.blurb-second {
+  text-align: right;
+}
+.blurb-txt > * {
+  margin: 5px 0px;
+}
+#profile-pic {
+  width: 100%; 
+  height: 100%;
+  object-fit: cover;  
+}
+
+
 footer {
   background-color: #333;
   color: #fff;
@@ -206,3 +264,38 @@ footer {
   padding-top: 20px;
   border-top: 1px solid #666;
 }
+
+/* @media (max-width: 768px) {
+  main{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .logo {
+    font-size: 2.5em;  
+  }
+  #sub-logo-txt {
+    padding: 0px 10px;
+    text-align: center; 
+  }
+  #action-area {
+    width: 285px;
+    height: 300px;
+  }
+  #drop-zone {
+    width: 285px;
+  }
+  .drop-zone {
+  border: none;
+  margin: 5px 0px;
+}
+  #drag-drop-txt {
+    display: none;
+  }
+  #upload-icon {
+    display: none;
+  }
+  .primary-btn {
+
+  }
+} */
