@@ -3,3 +3,4 @@
 **/*.mov
 **/*.gif
 **/tmp
+.vercel
